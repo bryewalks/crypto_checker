@@ -1,3 +1,5 @@
 #!/usr/bin/env ruby
 
 require "crypto_checker"
+
+CryptoChecker::CLI.start(ARGV)
