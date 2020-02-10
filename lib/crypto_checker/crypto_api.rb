@@ -4,7 +4,7 @@ module CryptoChecker
   class CryptoAPI
     class << self
 
-      DEFAULT_API_ENDPOINT = "https://api.coingecko.com/api/v3"
+      BASE_URL = "https://api.coingecko.com/api/v3"
 
       def check_price(coin, currency)
         url = generate_currency_url(coin, currency)
@@ -13,9 +13,15 @@ module CryptoChecker
       end
 
       def supported_vs_currencies
-        url = DEFAULT_API_ENDPOINT
+        url = BASE_URL
         url += "/simple/supported_vs_currencies"
         call_api(url)
+      end
+
+      def calculate_cost(amount, coin, currency)
+        url = generate_currency_url(coin, currency)
+        results = call_api(url).first
+        amount * results.current_price
       end
 
       private
@@ -30,7 +36,7 @@ module CryptoChecker
       end
 
       def generate_currency_url(coin, currency)
-        url = DEFAULT_API_ENDPOINT
+        url = BASE_URL
         url += "/coins/markets"
         url += "?vs_currency=#{currency}"
         url += symbol_or_id(coin)
@@ -39,4 +45,4 @@ module CryptoChecker
   end
 end
 
-CryptoChecker::CryptoAPI.supported_vs_currencies
+# p CryptoChecker::CryptoAPI.calculate_cost(10, "bitcoin", "usd")
