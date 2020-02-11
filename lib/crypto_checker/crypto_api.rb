@@ -7,9 +7,10 @@ module CryptoChecker
       BASE_URL = "https://api.coingecko.com/api/v3"
 
       def check_price(coin, currency)
-        url = generate_currency_url(coin, currency)
-        results = call_api(url).first
-        results.current_price
+        url = BASE_URL
+        url += "/coins/markets?vs_currency=#{currency}"
+        url += symbol_or_id(coin)
+        call_api(url).first.current_price
       end
 
       def supported_vs_currencies
@@ -19,8 +20,7 @@ module CryptoChecker
       end
 
       def calculate_cost(amount, coin, currency)
-        price = check_price(coin, currency)
-        amount * price
+        check_price(coin, currency) * amount
       end
 
       def top_coins(amount)
@@ -38,13 +38,6 @@ module CryptoChecker
 
       def symbol_or_id(coin)
         coin.length == 3 ? "&symbols=#{coin}" : "&ids=#{coin}"
-      end
-
-      def generate_currency_url(coin, currency)
-        url = BASE_URL
-        url += "/coins/markets"
-        url += "?vs_currency=#{currency}"
-        url += symbol_or_id(coin)
       end
     end
   end
