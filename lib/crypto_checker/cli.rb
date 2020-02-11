@@ -36,5 +36,13 @@ module CryptoChecker
         puts currency
       end
     end
+
+    desc "top [AMOUNT]", "List top 10 cryptocurrencies or specified amount"
+    def top(amount = 10)
+      results = CryptoAPI.top_coins(amount)
+      results.each_with_index do |coin, index|
+        puts "#{index + 1}: #{coin.name}"
+      end
+    end
   end
 end

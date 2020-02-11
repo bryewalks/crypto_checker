@@ -19,9 +19,14 @@ module CryptoChecker
       end
 
       def calculate_cost(amount, coin, currency)
-        url = generate_currency_url(coin, currency)
-        results = call_api(url).first
-        amount * results.current_price
+        price = check_price(coin, currency)
+        amount * price
+      end
+
+      def top_coins(amount)
+        url = BASE_URL
+        url += "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=#{amount}"
+        call_api(url)
       end
 
       private
@@ -44,5 +49,3 @@ module CryptoChecker
     end
   end
 end
-
-# p CryptoChecker::CryptoAPI.calculate_cost(10, "bitcoin", "usd")
