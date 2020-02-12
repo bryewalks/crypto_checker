@@ -29,6 +29,12 @@ module CryptoChecker
         call_api(url)
       end
 
+      def find_symbol(coin)
+        url = BASE_URL
+        url += "/coins/#{coin.gsub(' ', '-')}"
+        call_api(url).symbol
+      end
+
       private
 
       def call_api(url)

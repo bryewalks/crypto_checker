@@ -30,13 +30,19 @@ module CryptoChecker
       end
     end
 
-    desc "top [AMOUNT]", "List top 10 cryptocurrencies or specified amount"
+    desc "top [AMOUNT]", "Lists top 10 cryptocurrencies or specified amount"
     map "-t" => "top"
     def top(amount = 10)
       results = CryptoAPI.top_coins(amount)
       results.each_with_index do |coin, index|
         puts "#{index + 1}: #{coin.name}"
       end
+    end
+
+    desc "symbol [COIN]", "Finds symbol for given coin."
+    map "-sym" => "symbol"
+    def symbol(coin)
+      puts CryptoAPI.find_symbol(coin) || "No Results"
     end
 
     no_tasks do
