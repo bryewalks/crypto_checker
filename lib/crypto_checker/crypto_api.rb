@@ -10,7 +10,8 @@ module CryptoChecker
         url = BASE_URL
         url += "/coins/markets?vs_currency=#{currency}"
         url += symbol_or_id(coin)
-        call_api(url).first.current_price
+        results = call_api(url)
+        results.first.current_price if results
       end
 
       def supported_vs_currencies
@@ -20,7 +21,8 @@ module CryptoChecker
       end
 
       def calculate_cost(amount, coin, currency)
-        check_price(coin, currency) * amount
+        price = check_price(coin, currency)
+        price * amount if price
       end
 
       def top_coins(amount)
@@ -32,14 +34,19 @@ module CryptoChecker
       def find_symbol(coin)
         url = BASE_URL
         url += "/coins/#{coin.gsub(' ', '-')}"
-        call_api(url).symbol
+        results = call_api(url)
+        results.symbol if results
       end
 
       private
 
       def call_api(url)
         response = HTTP.get(url)
-        JSON.parse(response, object_class: OpenStruct)
+        results = JSON.parse(response, object_class: OpenStruct)
+        if results.empty?
+          puts "No Results Found"
+          nil
+        end
       end
 
       def symbol_or_id(coin)

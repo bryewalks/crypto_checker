@@ -11,22 +11,24 @@ module CryptoChecker
     map "-p" => "price"
     def price(coin = DEFAULT_CRYPTOCURRENCY, currency = DEFAULT_CURRENCY)
       price = CryptoAPI.check_price(coin, currency)
-      puts format_currency(price, currency)
+      puts format_currency(price, currency) if price
     end
 
     desc "cost [AMOUNT COIN CURRENCY]", "Calculates the cost of specified amount of cryptocurrency. Default currency of USD."
     map "-c" => "cost"
     def cost(amount, coin, currency = DEFAULT_CURRENCY)
       price = CryptoAPI.calculate_cost(amount.to_i, coin, currency)
-      puts format_currency(price, currency)
+      puts format_currency(price, currency) if price
     end
 
     desc "supported", "Lists supported currencies to check cryptocurrency against."
     map "-s" => "supported"
     def supported
       results = CryptoAPI.supported_vs_currencies
-      results.each do |currency|
-        puts currency
+      if results
+        results.each do |currency|
+          puts currency
+        end
       end
     end
 
@@ -34,15 +36,18 @@ module CryptoChecker
     map "-t" => "top"
     def top(amount = 10)
       results = CryptoAPI.top_coins(amount)
-      results.each_with_index do |coin, index|
-        puts "#{index + 1}: #{coin.name}"
+      if results
+        results.each_with_index do |coin, index|
+          puts "#{index + 1}: #{coin.name}"
+        end
       end
     end
 
     desc "symbol [COIN]", "Finds symbol for given coin."
     map "-sym" => "symbol"
     def symbol(coin)
-      puts CryptoAPI.find_symbol(coin) || "No Results"
+      symbol = CryptoAPI.find_symbol(coin)
+      puts symbol if symbol
     end
 
     no_tasks do
