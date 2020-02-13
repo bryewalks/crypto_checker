@@ -39,7 +39,12 @@ module CryptoChecker
 
       def call_api(url)
         response = HTTP.get(url)
-        JSON.parse(response, object_class: OpenStruct)
+        case response.code
+        when 200
+          JSON.parse(response, object_class: OpenStruct)
+        when 404
+          puts "No Results Found"
+        end
       end
 
       def symbol_or_id(coin)
